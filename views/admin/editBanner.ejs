@@ -1,0 +1,101 @@
+<%-include('header')-%>
+
+<div class="container-fluid pt-4 px-4">
+  <div class="row g-4">
+    <div style="width: 100%;" class="col-sm-12 col-xl-6">
+      <div class="bg-light rounded h-100 p-4">
+        <h6 class="mb-4">EDIT BANNER</h6>
+        <% if (message) { %>
+          <div class="alert alert-<%= message.type %> alert-dismissible fade show" role="alert" id="alert">
+            <strong><%= message.message %></strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <% } %>
+          <form id="addBanner" class="mt-5" method="post" action="/admin/updateBanner/<%=banner._id%>" enctype="multipart/form-data" >
+          <!-- banner Name -->
+          <div class="mb-3">
+            <label for="UrunAdi" class="form-label">Banner Name</label>
+            <input value="<%=banner.name%>" name="bannername" type="text" class="form-control" id="bannerName" >
+            <small id="bannerError" style="color: red;"></small>
+          </div>
+          
+         
+          <!-- Description -->
+          <div class="mb-3">
+            <label for="UrunAciklama" class="form-label">Description</label>
+            <input value="<%=banner.description%>" name="description" type="text" class="form-control" id="bannerDescription" >
+            <small id="descriptionError" style="color: red;"></small>
+          </div>
+          
+          <div class="mb-3">
+            <label for="Kategori" class="form-label">Category</label>
+            <select name="category" id="Category" class="ms-1 d-block w-100" >
+              <% category.forEach((row) => { %>
+                <% if(row.isAvailable == true){ %> 
+                  <option value="<%= row.category %>"><%= row.category %></option>
+                <% } %>
+              <% }); %>
+            </select>
+            <small id="categoryError" style="color: red;"></small>
+          </div>
+          
+          
+          <!-- banner Image -->
+          <div class="mb-3">
+            <label for="UrunImage" class="form-label">Banner Image</label>
+            <input name="bannerimage" accept="image/*" type="file" class="form-control" name="UrunImage" id="bannerImage">
+            <div style="display: flex; margin-top: 20px;">
+                <div id="image" style="position: relative;">
+                    <img class="img-fluid" style="width: 120px; margin: 10px;" src="/img/<%= banner.images[0]%>" alt="">
+                </div>
+            <div id="error" style="color: red;"></div>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button class="btn btn-primary" type="submit" id="button" >EDIT BANNER</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%-include('footer')-%>
+
+
+<script>
+    document.getElementById('button').addEventListener('click',(e) => {
+        e.preventDefault();
+
+        const bannerName = document.getElementById('bannerName').value.trim();
+        if(bannerName == ''){
+            document.getElementById('bannerError').innerHTML = 'Enter Banner Name';
+        }
+        
+        const bannerDescription = document.getElementById('bannerDescription').value.trim();
+        if(bannerDescription == ''){
+            document.getElementById('descriptionError').innerHTML = 'Enter Banner Description';
+        }
+
+    const image = document.getElementById('image');
+      const input = document.getElementById('bannerImage');
+      const files = input.files;
+
+      if(image == null && files.length == 0) {
+        document.getElementById('error').innerHTML = 'Must contain Image';
+        return
+      }
+  
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileType = file.type;
+  
+        if (!fileType.startsWith('image/')) {
+          document.getElementById('error').innerHTML = 'Invalid file type. Please upload only images.';
+          input.value = ''
+          return false;
+        }
+      }
+
+        document.getElementById('addBanner').submit();
+    })
+</script>

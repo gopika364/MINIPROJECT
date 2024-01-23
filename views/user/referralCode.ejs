@@ -1,0 +1,31 @@
+<%-include('header')-%>
+
+<div class="container mt-5">
+  <div class="card mx-auto" style="max-width: 500px;">
+    <div class="card-body text-center">
+      <h5 class="card-title mb-4">Your Referral Code</h5>
+      <h2 class="card-text mb-4"><%= referralCode %></h2>
+      <p class="card-text">Share this code with your friends to earn rewards!</p>
+      <div class="mb-4">
+        <button class="btn btn-primary" onclick="copyReferralCode()">Copy to Clipboard</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function copyReferralCode() {
+    const referralCodeInput = document.createElement('input');
+    referralCodeInput.value = '<%= referralCode %>';
+    document.body.appendChild(referralCodeInput);
+    referralCodeInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(referralCodeInput);
+    
+  }
+
+  
+</script>
+
+<%-include('footer')-%>
+ 

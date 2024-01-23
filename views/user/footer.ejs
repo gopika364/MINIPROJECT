@@ -1,0 +1,117 @@
+<!--Footer-->
+<footer id="footer">
+    <div class="newsletter-section">
+        <div class="container">
+            <div class="row">
+                   
+                    
+                </div>
+            </div>
+        </div>
+    <div class="site-footer">
+        <div class="container">
+             <!--Footer Links-->
+            <div class="footer-top">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                            <a href="/">
+                                <img style="background-color: white;" src="/user/images/logo.svg" alt="Belle Multipurpose Html Template" title="Belle Multipurpose Html Template" />
+                            </a>
+                    </div>
+                    
+                    <div class="col-12 col-sm-12 col-md-3 col-lg-3 contact-box">
+                        <h4 class="h4">Contact Us</h4>
+                        <ul class="addressFooter">
+                            <li><i class="icon anm anm-map-marker-al"></i><p>TRIVANDRUM,<br>2568 steet, 23568 NY</p></li>
+                            <li class="phone"><i class="icon anm anm-phone-s"></i><p>9874143581</p></li>
+                            <li class="email"><i class="icon anm anm-envelope-l"></i><p>mail1234@gmail.com</p></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--End Footer Links-->
+            <hr>
+            <div class="footer-bottom">
+                <div class="row">
+                    <!--Footer Copyright-->
+                    <!--End Footer Copyright-->
+                    <!--Footer Payment Icon-->
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 order-0 order-md-1 order-lg-1 order-sm-0 payment-icons text-right text-md-center">
+                        <h4 style="color: aliceblue;">Copyright © All rights reserved | BK</h4>
+                    </div>
+                    <!--End Footer Payment Icon-->
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!--End Footer-->
+
+
+<!--Scoll Top-->
+<span id="site-scroll"><i class="icon anm anm-angle-up-r"></i></span>
+<!--End Scoll Top-->
+
+
+ <!-- Including Jquery -->
+ <script src="/user/js/vendor/jquery-3.3.1.min.js"></script>
+ <script src="/user/js/vendor/jquery.cookie.js"></script>
+ <script src="/user/js/vendor/modernizr-3.6.0.min.js"></script>
+ <script src="/user/js/vendor/wow.min.js"></script>
+ <!-- Including Javascript -->
+ <script src="/user/js/bootstrap.min.js"></script>
+ <script src="/user/js/plugins.js"></script>
+ <script src="/user/js/popper.min.js"></script>
+ <script src="/user/js/lazysizes.js"></script>
+ <script src="/user/js/main.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-v6DZw2DOHWBv5Z2I53Lc3x2spfyRfBQ6WRrB3Naf5u7F6bNEnjNULtfIIqUp/Cta" crossorigin="anonymous"></script>
+
+ <script>
+    $(function(){
+        var $pswp = $('.pswp')[0],
+            image = [],
+            getItems = function() {
+                var items = [];
+                $('.lightboximages a').each(function() {
+                    var $href   = $(this).attr('href'),
+                        $size   = $(this).data('size').split('x'),
+                        item = {
+                            src : $href,
+                            w: $size[0],
+                            h: $size[1]
+                        }
+                        items.push(item);
+                });
+                return items;
+            }
+        var items = getItems();
+    
+        $.each(items, function(index, value) {
+            image[index]     = new Image();
+            image[index].src = value['src'];
+        });
+        $('.prlightbox').on('click', function (event) {
+            event.preventDefault();
+          
+            var $index = $(".active-thumb").parent().attr('data-slick-index');
+            $index++;
+            $index = $index-1;
+    
+            var options = {
+                index: $index,
+                bgOpacity: 0.9,
+                showHideOpacity: true
+            }
+            var lightBox = new PhotoSwipe($pswp, PhotoSwipeUI_Default, items, options);
+            lightBox.init();
+        });
+    });
+    </script>
+
+</div>
+</body>
+
+</html>

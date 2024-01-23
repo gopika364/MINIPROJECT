@@ -1,0 +1,125 @@
+<%-include('header')-%>
+
+    <!--Start Body Content-->
+
+    <div id="page-content">
+    	<div class="page section-header text-center">
+			<div class="page-title">
+        		<div class="wrapper"><h1 class="page-width">Create an Account</h1></div>
+
+                <% if(message) { %>
+                    <div style="margin-top: 10px;" id="alert" class="alert alert-<%= message.type %> alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong><%= message.message %></strong>
+                    </div>
+                <% } %>
+      		</div>
+		</div>
+        <div class="container">
+        	<div class="row">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 main-col offset-md-3">
+                	<div class="mb-4">
+                       <form method="post" action="/register" id="CustomerLoginForm" accept-charset="UTF-8" class="contact-form">	
+                          <div class="row">
+	                          <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <label for="FirstName">Name</label>
+                                    <input type="text" name="name" placeholder="" id="FirstName" autofocus="">
+                                    <div id="error1" style="color: rgb(175, 0, 0);"></div>
+
+                                </div>
+                               </div>
+                               <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                               </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <label for="CustomerEmail">Email</label>
+                                    <input type="email" name="email" placeholder="" id="CustomerEmail" class="" autocorrect="off" autocapitalize="off" autofocus="">
+                                    <div id="error2" style="color: rgb(175, 0, 0);"> </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <label for="CustomerPassword">Password</label>
+                                    <input type="password" value="" name="password" placeholder="" id="CustomerPassword" class="">  
+                                    <div id="error" style="color: rgb(175, 0, 0);">
+                                    </div>                      	
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <label for="ReferralCode">Referral Code</label>
+                                    <div class="input-group">
+                                        <input type="text" name="enteredReferralCode" id="ReferralCode" class="form-control" placeholder="Enter Referral Code" autocorrect="off" autocapitalize="off" autofocus="">
+                                    </div>
+                                    <small class="text-muted">Have a referral code? Enter it to get special rewards!</small>
+                                </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="text-center col-12 col-sm-12 col-md-12 col-lg-12">
+                                <input type="submit" class="btn mb-3" id="btn1" value="Create">
+                            </div>
+                         </div>
+                     </form>
+                    </div>
+               	</div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        setTimeout(function() {
+          var alertDiv = document.getElementById('alert');
+          if (alertDiv) {
+            alertDiv.remove();
+          }
+        }, 5000);
+      </script>
+
+
+    <!--End Body Content-->
+    <script>
+    document.getElementById('btn1').addEventListener('click', (e) => {
+        e.preventDefault();
+
+        //to Clear previous error messages
+        document.getElementById('error').innerHTML = '';
+
+        //Trim input Fields
+        const name = document.getElementById('FirstName').value.trim();
+        if(name === '' ){
+            document.getElementById('error1').innerHTML = 'INVALID NAME ';
+            return;
+        }
+
+        // Validate email format
+        const CustomerEmail = document.getElementById('CustomerEmail').value.trim();
+        const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailFormat.test(CustomerEmail)) {
+            document.getElementById('error2').innerHTML = 'INVALID EMAIL ';
+            return;
+        }
+
+        // Validate password length
+        const CustomerPassword = document.getElementById('CustomerPassword').value.trim();
+
+        //Password format rules
+        const hasUppercase = /[A-Z]/.test(CustomerPassword);
+        const hasLowercase = /[a-z]/.test(CustomerPassword);
+        const hasDigit = /\d/.test(CustomerPassword);
+        if (CustomerPassword.length < 8 || !hasUppercase || !hasLowercase || !hasDigit) {
+            document.getElementById('error').innerHTML = 'Password should contain 8 character,one Uppercase one lowercase and Digit';
+            return;
+        }
+        document.getElementById('CustomerLoginForm').submit();
+    });
+
+    </script>
+  
+
+<%-include('footer')-%>

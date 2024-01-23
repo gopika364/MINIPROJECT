@@ -1,0 +1,136 @@
+<%-include('header')-%>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div style="width: 100%;" class="col-sm-12 col-xl-6">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">EDIT PRODUCT</h6>
+                <form class="mt-5" id="editProduct1" method="post" action="/admin/editproduct" enctype="multipart/form-data">
+                    <input type="text" hidden name="id" value="<%= product._id %>">
+                    <div class="mb-3">
+                      <label for="UrunAdi" class="form-label">Product Name</label>
+                      <input value="<%= product.name %>"  name="productname" type="text" class="form-control" id="productName" >
+                      <small id="productNameError" style="color: red;"></small>
+
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" for="UrunMiktar">Stock Quantity</label>
+                      <input min="1" value="<%= product.stock %>"  name="stockquantity" type="number" class="form-control" id="stockQantity" >
+                      <small id="stockQuantityError" style="color: red;"></small>
+
+                    </div>
+                    <div class="mb-3">
+                        <label for="UrunAdi" class="form-label">Price</label>
+                        <input min="1" value="<%= product.price %>"  name="price" type="number" class="form-control" id="productPrice" >
+                        <small id="priceError" style="color: red;"></small>
+                    </div>
+                    <div class="mb-3">
+                      <label for="UrunFiyat" class="form-label">Product Offer</label>
+                      <input placeholder="100%" min="1" max="100" value="<%= product.offer%>" name="productOffer" type="number" class="form-control" id="productOffer" >
+                    </div>
+                    <div class="mb-3">
+                        <label for="UrunAdi" class="form-label">Description</label>
+                        <input value="<%= product.description %>"  name="description" type="text" class="form-control" id="productDescription" >
+                        <small id="descriptionError" style="color: red;"></small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="Kategori" class="form-label">Product Category</label>
+                        <select name="productcategory" id="productCategory" class="ms-1 d-block w-100" >
+                            <option value="<%= product.category %>"><%= product.category %></option>
+                            <% category.forEach((row) => { %>
+                                <% if(row.isAvailable == true){ %>
+                                    <option value="<%= row.category %>"><%= row.category %></option>
+                                <% } %>
+                            <% }); %>
+                        </select>
+                        <small id="categoryError" style="color: red;"></small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="UrunImage" class="form-label">Product Image</label>
+                        <input name="productimage" accept="image/*" type="file" multiple class="form-control" name="UrunImage" id="productImage">
+                        <div style="display: flex; margin-top: 20px;">
+                            <div id="error" style="color: red;"></div>
+                            <% product.images.forEach(element => { %>                        
+                                <div id="image" style="position: relative;">
+                                    <img class="img-fluid" style="width: 90px; margin: 10px;" src="/img/<%= element %>" alt="">
+                                    <a style="position: absolute; top: 0; right: 0; color: red;" class="fas fa-times" href="/admin/deleteproductimg/<%= element %>/<%= product._id %>"></a>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button id="button" class="btn btn-primary" type="submit">Update</button>
+                    </div>
+                  </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.getElementById('button').addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      const productName = document.getElementById('productName').value.trim();
+      if(productName === '') {
+        document.getElementById('productNameError').innerHTML = 'Enter Product Name';
+        return ;
+      }
+  
+      const stockQuantity = document.getElementById('stockQantity').value.trim();
+      if(stockQuantity === '') {
+        document.getElementById('productNameError').innerHTML ='';
+        document.getElementById('stockQuantityError').innerHTML = 'Enter Quantity';
+        return ;
+      }
+
+
+      const productPrice = document.getElementById('productPrice').value.trim();
+      if(productPrice === '') {
+        document.getElementById('stockQuantityError').innerHTML = '';
+        document.getElementById('priceError').innerHTML = 'Enter Price';
+        return ;
+      }
+  
+      const description = document.getElementById('productDescription').value.trim();
+      if(description === '') {
+        document.getElementById('priceError').innerHTML = '';
+        document.getElementById('descriptionError').innerHTML = 'Enter Description';
+        return ;
+      }
+  
+      const productcategory = document.getElementById('productCategory').value.trim();
+      if(productcategory === '') {
+        document.getElementById('descriptionError').innerHTML = '';
+        document.getElementById('categoryError').innerHTML = 'Choose Category';
+        return ;
+      }
+
+      const image = document.getElementById('image');
+      const input = document.getElementById('productImage');
+      const files = input.files;
+
+      if(image == null && files.length == 0) {
+        document.getElementById('error').innerHTML = 'Must contain Image';
+        return
+      }
+  
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileType = file.type;
+  
+        if (!fileType.startsWith('image/')) {
+          document.getElementById('error').innerHTML = 'Invalid file type. Please upload only images.';
+          input.value = ''
+          return false;
+        }
+      }
+
+      document.getElementById('editProduct1').submit();
+  
+    })
+  </script>
+
+<%-include('footer')-%>

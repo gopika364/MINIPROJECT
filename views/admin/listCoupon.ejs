@@ -1,0 +1,44 @@
+<%-include('header')-%>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">CODE</th>
+            <th scope="col">DISCOUNT</th>
+            <th scope="col">MIN VALUE</th>
+            <th scope="col">EXPIRY DATE</th>
+            <th scope="col">DESCRIPTION</th>
+            <th scope="col">ACTION</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% coupon.forEach((row, index) => { %>
+          <tr>
+            <th scope="row"><%= index + 1 %></th>
+            <td><%= row.code %></td>
+            <td><%= row.discount %></td>
+            <td><%= row.minValue %></td>
+            <td><%= row.expiryDate %></td>
+            <td><%= row.description %></td>
+            <td>
+              <div style="display: flex;">
+              <form method="get" action="/admin/editCoupon/<%= row._id %>">
+                <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-trash-alt"></i> Edit</button>
+            </form>
+            <div style="margin-right: 5px;"></div>
+              <form method="post" action="/admin/deleteCoupon/<%= row._id %>">
+                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Trash</button>
+            </form>
+            </div>
+
+          </td>
+          </tr>
+        <% }); %>
+      </tbody>
+</table>
+
+<%-include('footer')-%>
+
+
+

@@ -1,0 +1,523 @@
+<%-include('header')-%>
+
+<!--Body Content-->
+<div id="page-content">
+    <!--Page Title-->
+    <div class="page section-header text-center">
+        <div class="page-title">
+            <div class="wrapper"><h1 class="page-width">Checkout</h1></div>
+          </div>
+    </div>
+    <!--End Page Title-->
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-3">
+                <div class="customer-box returning-customer">
+                    <h3><i class="icon anm anm-user-al"></i> DO YOU WANT TO ADD NEW ADDRESS? <a href="#customer-login" id="customer" class="text-white text-decoration-underline">ADD HERE</a></h3>
+                    <div id="customer-login" class="customer-content">
+                        <div class="customer-info">
+                            <form method="post" action="/addAddress">
+                                <fieldset>
+                                    <h2 class="login-title mb-3">Billing details</h2>
+                                    <div class="row">
+                                        <div class="form-group col-md-6 col-lg-6 col-xl-6 required">
+                                            <label for="input-firstname">Name <span class="required-f">*</span></label>
+                                            <input name="name" value="" id="input-firstname" type="text">
+                                        </div>
+                                        <div class="form-group col-md-6 col-lg-6 col-xl-6 required">
+                                            <label for="input-lastname">Mobile <span class="required-f">*</span></label>
+                                            <input name="mobile" value="" id="input-lastname" type="tel">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-6 col-lg-6 col-xl-6 required">
+                                            <label for="input-email">Address <span class="required-f">*</span></label>
+                                            <input name="address" value="" id="input-email" type="text">
+                                        </div>
+                                        <div class="form-group col-md-6 col-lg-6 col-xl-6 required">
+                                            <label for="input-telephone">City <span class="required-f">*</span></label>
+                                            <input name="city" value="" id="input-telephone" type="text">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                
+                                <fieldset>
+                                    <div class="row">
+                                        <div class="form-group col-md-6 col-lg-6 col-xl-6">
+                                            <label for="input-company">State</label>
+                                            <input name="state" value="" id="input-company" type="text">
+                                        </div>
+                                        <div class="form-group col-md-6 col-lg-6 col-xl-6 required">
+                                            <label for="input-address-1">Postcode <span class="required-f">*</span></label>
+                                            <input name="postcode" value="" id="input-address-1" type="number">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="order-button-payment">
+                                    <button class="btn" value="Place order" type="submit">ADD ADDRESS</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <% user.address.forEach((row,index) => { %>
+
+                    <h3 style="margin-top: 30px;"><%= row.name %></h3>
+                    <h3 ><%= row.mobile %></h3>
+                    <h3 ><%= row.address1 %></h3>
+                    <h3 ><%= row.city %></h3>
+                    <h3 ><%= row.state %></h3>
+                    <h3 ><%= row.postCode %></h3>
+                    <input style="margin-left: 1px;" class="form-check-input" type="radio"
+                        name="flexRadioDefault1" id="flexRadioDefault1<%= index %>"
+                        data-address="<%= `${row.address1},${row.city},${row.state},${row.postCode},${row.mobile},${row.name}` %>">
+                    <label style="margin-left: 20px;" class="form-check-label"
+                        for="flexRadioDefault1<%= index %>">
+                        Select
+                    </label>
+                <% }) %>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-3">
+                <h2 class="order-title mb-4">Your Order</h2>
+                        <div class="table-responsive-sm order-table"> 
+                            <table class="bg-white table table-bordered table-hover text-center">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">Product Name</th>
+                                        <th>Price</th>
+                                        <th>Qty</th>
+                                        <th> </th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% items.forEach((row,index) => { %>
+                                        <tr>
+                                            <td class="text-left"><%= row.productName%></td>
+                                            <td><%= row.price %></td>
+                                            <td><%= row.quantity%></td>
+                                            <td> </td>
+                                            <td><%= row.totalPrice %></td>
+                                            <td hidden><img src="/img/<%= row.image %>" alt=""></td>
+                                            <td hidden><%= row.productId %></td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                                <tfoot class="font-weight-600">
+                                    <tr>
+                                        <td colspan="4" class="text-right" style="font-weight: bold;">Total</td>
+                                        <td id="total"><%= updatedGrandTotal %></td>
+                                    </tr>
+                                    <tr>
+                                        <td id="couponadded"><span> <i></i></span></td>
+                                        <td id="clear"></td>
+                                        <section hidden id="discount1"></section>
+                                        <section hidden id="couponid"></section>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="text-right" style="font-weight: bold;">Grand Total</td>
+                                        <td id="grandTotal"><%= updatedGrandTotal %></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <input type="text" value="<%=user.email %>" hidden id="userEmail">
+                    </hr>
+                    <div class="discount-coupon" style="margin-bottom: 20px;">
+                        <div id="coupon" class="coupon-dec tab-pane active">
+                            <label class="required get" for="coupon-code" >
+                            </label>
+                            <input  placeholder="enter coupon code" id="coupon-code" required="" type="text" class="mb-3">     
+
+                            <section style="color: red;" id="cpn"></section>
+
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                VIEW ALL COUPONS
+                            </button>
+                            
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">COUPON</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="">
+                                            <div style="max-height: 300px; overflow-y: auto; margin-top: 15px; border-radius: 30px;" class="cart__total__procced">
+                                                <% coupon.forEach((coupon, index) => { %>
+                                                    <div class="card" style="margin-bottom: 30px;">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title"><%= coupon.name %></h5>
+                                                            <p class="card-text">Get <span class="discount-amount"><%= coupon.discount %> % OFF</span> on your purchase!</p>
+                                                            <p class="card-text">Use code: <span class="coupon-code"><%= coupon.code %></span></p>
+                                                            <p class="card-text">Valid until: <span class="expiry-date"><%= coupon.expiryDate %></span></p>
+                                                        </div>
+                                                    </div>
+                                                <% }) %>
+                                            </div>
+                                           
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+
+                            <button id="buttonapply" class="coupon-btn btn" type="button">Apply Coupon</button>
+                        </div>
+                    </div>
+                    
+                    <div class="your-payment">
+                        <h2 class="payment-title mb-3">payment method</h2>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                                <h3>COD</h3>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                                <h3>Online Payment</h3>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                                <h3>Wallet Payment</h3>
+                            </label>
+                            <div id="walletError" style="color: red;"></div>
+                        </div>
+                        <div class="order-button-payment">
+                            <button class="btn" value="Place order" id="place-order" type="submit" style="font-size: 14px; padding: 8px 16px;">PLACE ORDER</button>
+                        </div>
+                           
+                    </div>
+                    
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Body Content-->
+
+<!--clear-->
+
+<script>
+    document.getElementById('clear').addEventListener('click',()=>{
+        const couponid = document.getElementById('couponid').innerText
+        const Proceedchkout = document.getElementById('Proceedchkout')
+
+        const url = '/clearCoupon'
+        fetch(url,{
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({couponid})
+        })
+        .then(response=> response.json())
+        .then(data=>{
+            if(data.message=='removed'){
+                window.location.href='/checkOut'
+            }
+        })
+    })
+
+</script>
+
+
+<script>
+    document.getElementById('buttonapply').addEventListener('click', () => {
+
+        let newtotal
+        let newtotal1
+
+        const total = document.getElementById('total').innerHTML
+        const grandTotal = document.getElementById('grandTotal').innerHTML 
+        const discount1 = document.getElementById('discount1')
+        const cpn = document.getElementById('cpn')
+        const couponadded = document.getElementById('couponadded')
+        const clear = document.getElementById('clear')
+        const coupenid = document.getElementById('couponid')
+        const couponvalue = document.getElementById('coupon-code').value;
+
+
+        const url='/verifycoupon' 
+    
+        fetch(url,{
+            method:'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({couponvalue,grandTotal,total})
+        })
+        .then(response => response.json())
+        .then(data =>{
+            if(data.message =="coupon matching"){
+                cpn.innerHTML='';
+                couponadded.innerHTML=`<td id="couponadded">Coupon Applied<span>-  ${data.discount}%<i></i></span></td>`
+                document.getElementById('clear').innerHTML = '<button id="clear" type="button" class="btn btn-danger">Clear Coupon</button>'
+                document.getElementById('grandTotal').innerHTML = data.newtotal
+                couponid.innerHTML=data.couponid
+                discount1.innerHTML = data.discount    
+                total1.innerHTML= data.newtotal;
+
+            }
+            else if(data.message=='minimum 2000'){
+                cpn.innerHTML=`Minimum Purchase Of ${data.minvalue}`
+            }
+            else if(data.message =='invalid coupon'){
+                document.getElementById('cpn').innerHTML = 'Invalid Coupon'
+                clear.innerHTML=''
+                coupenadded.innerHTML=''
+                total.innerHTML= data.grandtotal;
+            }
+            else if (data.message=='invalid'){
+                clear.innerHTML=''
+                coupenadded.innerHTML=''
+                total1.innerHTML= data.grandtotal;
+                cpn.innerHTML='Invalid Coupon'
+            }
+            else if(data.message=='alredy in input'){
+                coupenadded.innerHTML=`<li id="coupenadded">Coupon Applied<span>-  ${data.discount}%<i></i></span></li>`
+                clear.innerHTML='<button id="clear" type="button" class="btn btn-danger">Clear Coupon</button>'  
+                total1.innerHTML= data.newtotal; 
+            }
+            else if(data.message == 'coupon in input'){
+                grandTotal.innerHTML = document.getElementById('total').innerHTML
+            }
+            else{
+                clear.innerHTML=''
+                coupenadded.innerHTML=''
+                cpn.innerHTML='Invalid Coupon'
+            }
+        })
+    });
+
+
+</script>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const placeOrderBtn = document.getElementById('place-order')
+    
+        if (placeOrderBtn) {
+            placeOrderBtn.addEventListener('click', async function (event) {
+                event.preventDefault();
+    
+                // Get selected address data
+                const selectedAddressRadio = document.querySelector('input[name="flexRadioDefault1"]:checked');
+                const selectedAddress = selectedAddressRadio ? selectedAddressRadio.getAttribute('data-address') : null;
+    
+                // Get order items data
+                const orderItems = [];
+                document.querySelectorAll('.order-table tbody tr').forEach(row => {
+                    const productName = row.querySelector('td.text-left').textContent;
+                    const price = row.querySelector('td:nth-child(2)').textContent;
+                    const quantity = row.querySelector('td:nth-child(3)').textContent;
+                    const totalPrice = row.querySelector('td:nth-child(5)').textContent;
+                    const image = row.querySelector('td:nth-child(6) img').getAttribute('src');
+                    const productId = row.querySelector('td:nth-child(7)').textContent; 
+
+    
+                    orderItems.push({
+                        productName,
+                        price,
+                        quantity,
+                        totalPrice,
+                        image,
+                        productId
+                    });
+                });
+    
+                // Get selected payment method
+                const selectedPaymentMethod = document.querySelector('input[name="flexRadioDefault"]:checked');
+                const paymentMethod = selectedPaymentMethod ? selectedPaymentMethod.nextElementSibling.textContent.trim() : null;
+                const userEmail = document.getElementById('userEmail').value;
+                const grandTotal = document.getElementById('grandTotal').innerHTML.trim();
+
+
+                const data = {
+                    address: selectedAddress,
+                    orderItems,
+                    paymentMethod: paymentMethod,
+                    userEmail : userEmail,
+                    grandTotal : grandTotal
+                };
+
+                const couponCode = document.getElementById('coupon-code').value;
+                
+    
+                if (paymentMethod === 'COD' && selectedAddress != null) {
+                    try {
+                        const response = await fetch('/cashOnDelivery', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({data,couponCode}),
+                        });
+        
+                        const result = await response.json();
+        
+                        if (response.ok) {
+                            window.location.href= '/orderConfirmed';
+                        } else {
+                            alert(result.message); 
+                        }
+                    } catch (error) {
+                        console.error('Error placing order:', error);
+                    }
+
+                }else if(paymentMethod === 'Online Payment' && selectedAddress != null) {
+                    const url = '/onlinePayment'
+                    let totalamount = document.getElementById('grandTotal').innerHTML.trim();
+
+                    fetch(url,{
+                        method : 'post',
+                        headers : {
+                            'Content-Type' : 'application/json'
+                        },
+                        body : JSON.stringify({totalamount })
+                    })
+                    .then(response => response.json())
+                    .then(data1 =>{
+                    
+                        const options = {
+                        "key": "rzp_test_1IphvIbZM875io", // Enter the Key ID generated from the Dashboard
+                        "amount": data1.order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                        "currency": "INR",
+                        "name": '', //your business name
+                        "description": "Test Transaction",
+                        "image": "",
+                        "order_id": data1.order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                        "callback_url": `/paymentSuccess?data=${JSON.stringify(data)}&couponCode=${JSON.stringify(couponCode)}`,
+                        // "callback_url": `/paymentSuccess?data=${encodeURIComponent(JSON.stringify(data))}&couponCode=${encodeURIComponent(couponCode)}`,
+
+                        "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+                            // "name": "Gaurav Kumar", //your customer's name
+                            // "email": "",
+                            // "contact": "" //Provide the customer's phone number for better conversion rates 
+                        },
+                        "notes": {
+                            "address": "Razorpay Corporate Office"
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        }
+                    };
+                    const rzp1 = new Razorpay(options);
+                    rzp1.open();
+                    })
+                }else if (paymentMethod === 'Wallet Payment' && selectedAddress != null) {
+                    try {
+                        const response = await fetch('/walletPayment', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({data,couponCode}),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if(data.message == 'Insufficent Balance'){
+                                document.getElementById('walletError').innerHTML = 'Insufficent Balance';
+                            }else if(data.message == 'success'){
+                                window.location.href= '/orderConfirmed';
+                            }
+                        })
+        
+                     // const result = await response.json();
+                        // if (response.ok) {
+                        //     window.location.href= '/orderConfirmed';
+                        // } else if(result.message == ''){
+                            
+                        // }
+                        // else {
+                        //     alert(result.message); 
+                        // }
+                    } catch (error) {
+                        console.error('Error placing order:', error);
+                    }
+                }else{
+                    errorhappend()
+                }
+                //next payment(online or wallet)
+
+            });
+        }
+    });
+</script>
+    
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+
+function errorhappend(form) {
+    swal({
+    title: "Please Check,",
+    text: "Address And Payment!",
+    icon: "error",
+    buttons: true,
+    dangerMode: true,
+    });
+}
+
+</script>
+
+<!-- validate Address -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const addAddressForm = document.querySelector('#customer-login form');
+
+        if (addAddressForm) {
+            addAddressForm.addEventListener('submit', function (event) {
+                if (!validateAddress()) {
+                    event.preventDefault();
+                    highlightInvalidFields();
+                }
+            });
+        }
+
+        function validateAddress() {
+            const name = document.getElementById('input-firstname').value.trim();
+            const mobile = document.getElementById('input-lastname').value.trim();
+            const address = document.getElementById('input-email').value.trim();
+            const city = document.getElementById('input-telephone').value.trim();
+            const state = document.getElementById('input-company').value.trim();
+            const postcode = document.getElementById('input-address-1').value.trim();
+
+
+            return name !== '' && mobile !== '' && address !== '' && city !== '' && state !== '' && postcode !== '';
+        }
+
+        function highlightInvalidFields() {
+            const fieldsToCheck = ['input-firstname', 'input-lastname', 'input-email', 'input-telephone', 'input-company', 'input-address-1'];
+
+            fieldsToCheck.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.style.border = '2px solid red';
+                } else {
+                    field.style.border = '';
+                }
+            });
+        }
+    });
+</script>
+
+
+
+<%-include('footer')-%>

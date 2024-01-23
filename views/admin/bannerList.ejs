@@ -1,0 +1,60 @@
+<%- include('header') -%>
+<div>
+  <% if (message) { %>
+    <div class="alert alert-<%= message.type %> alert-dismissible fade show" role="alert" id="alert">
+        <strong><%= message.message %></strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% } %>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">TITLE</th>
+            <th scope="col">DESCRIPTION</th>
+            <th scope="col">BANNER</th>
+            <th scope="col">ACTIONS</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% banners.forEach((row, index) => { %>
+            <tr>
+                <th scope="row"><%= index + 1 %></th>
+                <td><%= row.name %></td>
+                <td><%= row.description %></td>
+                <td><img src="/img/<%=row.images[0] %>" alt="" style="max-width: 70px; max-height: 70px;"></td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <form method="get" action="/admin/editBanner/<%= row._id %>">
+                            <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> Edit</button>
+                        </form>
+                        <div style="margin-right: 5px;"></div>
+                        <form method="post" action="/admin/deleteBanner/<%= row._id %>">
+                            <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Trash</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        <% }); %>
+    </tbody>
+</table>
+
+<script>
+  function checker() {
+    const result=confirm('Are You Sure You Want to Delete?');
+    if(result==false){
+      event.preventDefault();
+    }
+  }
+
+  setTimeout(function() {
+      var alertDiv = document.getElementById('alert');
+      if (alertDiv) {
+        alertDiv.remove();
+      }
+    }, 5000);
+    
+</script>
+
+<%- include('footer') -%>

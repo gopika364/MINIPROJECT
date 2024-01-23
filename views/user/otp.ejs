@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Otp-Verification</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <style>
+
+        body {
+          padding-top: 150px;
+          background: #bbb9b9;
+}
+.text-color {
+  color: #000000;
+}
+
+.card {
+  width: 350px;
+  padding: 10px;
+  border:#000000;
+  border-color: #030202;
+  background-color: white;
+  position:relative;
+}
+.container {
+  
+  height: 100vh;
+}
+.mobile-text {
+  color: #000000;
+  font-size: 15px;
+}
+.form-control {
+  margin-right: 12px;
+}
+.form-control:focus {
+  color: #084f96;
+  background-color: #46becb66;
+  border-color: #030202;
+  outline: 1;
+  box-shadow: none;
+  
+}
+.cursor {
+  cursor: pointer;
+}
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button{
+  -webkit-appearance: none;
+  margin:0px;
+}
+
+button{
+  width: 150px;
+  height: 45px;
+  border-radius: 25x;
+  cursor: pointer;
+  font-size: 16px;
+  border: none;
+  color: aliceblue;
+  margin: 20px;
+}
+button:hover{
+  background: black;
+}
+
+  </style>
+  </head>
+  <body>
+    <form>
+      <h5 style="font-size:30px; margin-bottom:20px;" class="d-flex justify-content-center align-items-center continer" class="m-0">OTP VERIFICATION</h5>
+      <div class="d-flex justify-content-center align-items-center continer">
+      <div class="card py-5 px-3">
+        <span class="mobile-text"
+          ><b>Enter the code we just sent on your email</b>
+        </span>
+        <input id="email" type="text" hidden value="<%=email%>">
+        <div style="color: red;" id="message"></div>
+        <div class="d-flex flex-row mt-5">
+          <input id="otp" name="otp" class="form-control" />
+        </div>
+        <div class="text-center mt-5">
+            <button id="button1" type="button" style="margin-top: -20px;margin-bottom: 20px ;" class="btn-dark ">Submit</button>
+          <span class="d-block mobile-text" id="countdown"></span>
+          <span class="d-block mobile-text" id="resend"></span>
+        </div>
+      </div>
+    </div>
+  </form>
+
+    <script>
+     let timerOn = true;
+      function timer(remaining) {
+        var m = Math.floor(remaining / 60);
+        var s = remaining % 60;
+        m = m < 10 ? "0" + m : m;
+        s = s < 10 ? "0" + s : s;
+        document.getElementById(
+          "countdown"
+        ).innerHTML = `Time left: ${m}:${s}`;
+        remaining -= 1;
+        if (remaining >= 0 && timerOn) {
+          setTimeout(function () {
+            timer(remaining);
+          }, 1000);
+          document.getElementById("resend").innerHTML = ``;
+          return;
+        }
+        if (!timerOn) {
+          return;
+        }
+        document.getElementById("resend").innerHTML = `Don't receive the code? 
+          <span class="font-weight-bold text-color cursor" onclick="resendOtp()"><a href="/resendOtp">Resend</a>
+          </span>`;
+      }
+
+      function resetTimer() {
+        timerOn = true;
+      }
+      timer(60);
+
+</script>
+
+<script>
+  document.getElementById('button1').addEventListener('click',()=>{
+
+      const otpValue = document.getElementById('otp').value
+
+      document.getElementById('message').innerHTML=''
+      const email = document.getElementById('email').value;
+
+      fetch(`/otp/${email}`,{
+          method: 'POST',
+          headers: {
+              'Content-Type' : 'application/json'
+          },
+          body: JSON.stringify({otpValue})
+      })
+      .then(response=> response.json())
+      .then(data=>{
+          if(data.message=='success'){
+              window.location.href='/login'
+          }
+          else if(data.message=='errorotp'){
+              document.getElementById('message').innerHTML='Invalid OTP'
+              document.getElementById('otp').value=''
+              setTimeout(() => {
+              document.getElementById('message').innerHTML=''}, 3000);
+          }
+      })
+})
+</script>
+</body>
+</html>

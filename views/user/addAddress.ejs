@@ -1,0 +1,153 @@
+<%-include('header')-%>
+
+<!--Body Content-->
+<div id="page-content">
+    <!--Page Title-->
+    <div class="page section-header text-center">
+        <div class="page-title">
+            <div class="wrapper"><h1 class="page-width">BILLING DETAILS</h1></div>
+          </div>
+    </div>
+    <!--End Page Title-->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-3">
+                <div class="customer-box returning-customer">
+                    <h3><i class="icon anm anm-user-al"></i> ADD ADDRESS</h3>
+                        <div class="customer-info">
+                            <form id="address-form" method="post" action="/userAddAddress" onsubmit="return validateForm()">
+
+                                <fieldset>
+                                    <div class="row">
+                                        <div class="form-group col-md-6 col-lg-6 col-xl-6 required">
+                                            <label for="input-firstname">Name <span class="required-f">*</span></label>
+                                            <input name="name" value="" id="input-firstname" type="text">
+                                            <div id="name-error" class="error-message"></div>
+                                        </div>
+                                        <div class="form-group col-md-6 col-lg-6 col-xl-6 required">
+                                            <label for="input-lastname">Mobile <span class="required-f">*</span></label>
+                                            <input name="mobile" value="" id="input-lastname" type="tel">
+                                            <div id="mobile-error" class="error-message"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-6 col-lg-6 col-xl-6 required">
+                                            <label for="input-email">Address <span class="required-f">*</span></label>
+                                            <input name="address" value="" id="input-email" type="text">
+                                            <div id="address-error" class="error-message"></div>
+                                        </div>
+                                        <div class="form-group col-md-6 col-lg-6 col-xl-6 required">
+                                            <label for="input-telephone">City <span class="required-f">*</span></label>
+                                            <input name="city" value="" id="input-telephone" type="text">
+                                            <div id="city-error" class="error-message"></div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+        
+                                <fieldset>
+                                    <div class="row">
+                                        <div class="form-group col-md-6 col-lg-6 col-xl-6 required">
+                                            <label for="input-company">State <span class="required-f">*</span></label>
+                                            <input name="state" value="" id="input-state" type="text">
+                                            <div id="state-error" class="error-message"></div>
+
+                                        </div>
+                                        <div class="form-group col-md-6 col-lg-6 col-xl-6 required">
+                                            <label for="input-address-1">Postcode <span class="required-f">*</span></label>
+                                            <input name="postcode" value="" id="input-address-1" type="number">
+                                            <div id="postcode-error" class="error-message"></div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="order-button-payment">
+                                    <button class="btn" value="Place order" type="submit">ADD ADDRESS</button>
+                                </div>
+                            </form>
+                        </div>
+                    <!-- </div> -->
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-3">
+                <div style="background-color: black;padding: 10px;">
+                    <h3 style="color: white;"><i class="icon anm anm-user-al"></i> YOUR ADDRESSES</h3>
+                </div>
+                
+                <div style="max-height: 600px; overflow-y: auto;">
+                    <% user.address.forEach((row,index) => { %>
+
+                        <h3 style="margin-top: 30px;"><%= row.name %></h3>
+                        <h3 ><%= row.mobile %></h3>
+                        <h3 ><%= row.address1 %></h3>
+                        <h3 ><%= row.city %></h3>
+                        <h3 ><%= row.state %></h3>
+                        <h3 ><%= row.postCode %></h3>
+                        <a href="/userDeleteAddress/<%= row._id %>"><i><img src="/user/images/trash.svg" alt=""></i></a>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Body Content-->
+
+
+
+<script>
+    function validateForm() {
+        var name = document.getElementById('input-firstname').value.trim();
+        var mobile = document.getElementById('input-lastname').value.trim();
+        var address = document.getElementById('input-email').value.trim();
+        var city = document.getElementById('input-telephone').value.trim();
+        var state = document.getElementById('input-state').value.trim();
+        var postcode = document.getElementById('input-address-1').value.trim();
+
+        // Reset error messages
+        document.querySelectorAll('.error-message').forEach(function (element) {
+            element.textContent = '';
+        });
+
+        // Validate each field
+        if (name === '') {
+            document.getElementById('name-error').textContent = 'Name is required';
+            document.getElementById('name-error').style.color = 'red';
+            return false;
+        }
+
+        if (mobile === '') {
+            document.getElementById('mobile-error').textContent = 'Mobile is required';
+            document.getElementById('mobile-error').style.color = 'red';
+            return false;
+        }
+
+        if (address === '') {
+            document.getElementById('address-error').textContent = 'Address is required';
+            document.getElementById('address-error').style.color = 'red';
+            return false;
+        }
+
+        if (city === '') {
+            document.getElementById('city-error').textContent = 'City is required';
+            document.getElementById('city-error').style.color = 'red';
+            return false;
+        }
+
+        if (state === '') {
+            document.getElementById('state-error').textContent = 'City is required';
+            document.getElementById('state-error').style.color = 'red';
+            return false;
+        }
+
+        if (postcode === '') {
+            document.getElementById('postcode-error').textContent = 'Postcode is required';
+            document.getElementById('postcode-error').style.color = 'red';
+            return false;
+        }
+
+        
+        return true;
+    }
+</script
+
+
+<%-include('footer')-%>

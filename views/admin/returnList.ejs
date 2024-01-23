@@ -1,0 +1,127 @@
+<% function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
+    const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
+    return formattedDate;
+  }
+%>
+
+<%- include('header') -%>
+
+<div class="col-12">
+    <div class="bg-light rounded h-100 p-4">
+        <h6 class="mb-4">RETRUN DETAILS</h6>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">USER EMAIL</th>
+                        <th scope="col">DATE</th>
+                        <th scope="col">ADDRESS</th>
+                        <th scope="col">PRODUCT DETAILS</th>
+                        <th scope="col">PAYMENT METHOD</th>
+                        <th scope="col">STATUS</th>
+                        <th scope="col">ACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if(returnOrders && returnOrders.length > 0) { %>
+                        <% returnOrders.forEach((order, index) => { %> 
+                            <tr>
+                                <th scope="row"><%= index +1 %></th>
+                                <td><%= order.userEmail %></td>
+                                <td><%= formatDate(order.date) %></td>
+                                <td><%= order.address %></td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal<%= order._id %>">
+                                        Order Details
+                                    </button>
+                                    
+                                </td>
+                                <td><%= order.paymentMethod %></td>
+                                <form action="/admin/returnStatus/<%= order._id %>" method="POST">
+                                <td>
+                                    <select name="status" class="form-control" style="width: 100px; background-color: rgb(0, 136, 255); color: white;" id="editStatus<%= index %>">
+                                        <option value="order returned successfully">Accept</option>
+                                        <option value="returned rejected">Reject</option>
+                                    </select>
+                                    
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex flex-column">
+                                            <button class="btn btn-primary btn-sm" type="submit">
+                                                <i class="fas fa-save fa-xs"></i> Save
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </form>
+                            </tr>
+                            <!-- Button trigger modal -->
+                            <div class="modal fade" id="exampleModal<%= order._id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Order Details</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="card-body p-4" style="max-height: 400px; overflow-y: auto;">
+                                                <% order.orderItems.forEach((products, position) => { %>
+                                                    <div>
+                                                        <div class="d-flex flex-row mb-4 pb-2">
+                                                            <div class="flex-fill">
+                                                                <h5 class="fw-bold"><%= products.productName %></h5>
+                                                                <p class="text-muted">Quantity: <%= products.quantity %></p>
+                                                                <h4 class="mb-3">₹ <%= products.price %><span class="small text-muted"> (<%= order.paymentMethod %>) </span></h4>
+                                                            </div>
+                                                            <div>
+                                                                <img class="align-self-center img-fluid" src="<%= products.image %>" width="100">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <% }) %>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %> 
+                        <tr>
+                            <td colspan="8"> No orders found. </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<%- include('footer') -%>
+
+<script>
+    function saveStatus(orderId, index) {
+        const newStatus = document.getElementById(`editStatus${index}`).value;
+        
+        fetch(`/admin/editOrders/${orderId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: newStatus }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Status updated:', data);
+        })
+        .catch(error => {
+            console.error('Error updating status:', error);
+        });
+    }
+</script>
+

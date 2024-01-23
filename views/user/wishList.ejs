@@ -1,0 +1,75 @@
+<%- include('header') %>
+
+ <!--Body Content-->
+ <div id="page-content">
+    <!--Page Title-->
+    <div class="page section-header text-center">
+        <div class="page-title">
+            <div class="wrapper"><h1 class="page-width">Wish List</h1></div>
+          </div>
+    </div>
+    <!--End Page Title-->
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 main-col">
+                <form action="#">
+                    <div class="wishlist-table table-content table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="product-name text-center alt-font">Remove</th>
+                                    <th class="product-price text-center alt-font">Images</th>
+                                    <th class="product-name alt-font">Product</th>
+                                    <th class="product-price text-center alt-font">Unit Price</th>
+                                    <th class="product-subtotal text-center alt-font">Add to Cart</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% wishListItems.forEach((item, index) => { %>
+                                    <tr>
+                                        <td class="product-remove text-center" valign="middle">
+                                            <% if (item.productId && item.productId._id) { %>
+                                                <a href="/removeWishList/<%= item.productId._id %>"><i class="icon icon anm anm-times-l"></i></a>
+                                            <% } %>
+                                        </td>
+                                        <td class="product-thumbnail text-center">
+                                            <% if (item.productId && item.productId.images && item.productId.images[0]) { %>
+                                                <a href="#"><img src="/img/<%= item.productId.images[0] %>" alt="" title="" /></a>
+                                            <% } %>
+                                        </td>
+                                        <td class="product-name">
+                                            <h4 class="no-margin">
+                                                <% if (item.productId) { %>
+                                                    <a href="#"><%= item.productId.name %></a>
+                                                <% } %>
+                                            </h4>
+                                        </td>
+                                        <td class="product-price text-center">
+                                            <% if (item.productId) { %>
+                                                <span class="amount"><%= item.productId.price %></span>
+                                            <% } %>
+                                        </td>
+                                        <td class="product-subtotal text-center">
+                                            <% if (item.productId && item.productId._id) { %>
+                                                <a href="/addtoCart/<%= item.productId._id %>" type="button" class="btn btn-small">Add To Cart</a>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </form>                   
+               </div>
+        </div>
+    </div>
+    
+</div>
+<!--End Body Content-->
+</div>
+
+
+
+<%- include('footer') %>

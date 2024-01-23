@@ -1,0 +1,102 @@
+<%- include('header') -%>
+
+<div class="container-fluid pt-4 px-4">
+  <div class="row g-4">
+    <div style="width: 100%;" class="col-sm-12 col-xl-6">
+      <div class="bg-light rounded h-100 p-4">
+        <h6 class="mb-4">EDIT COUPON</h6>
+
+        <% if (message) { %>
+          <div class="alert alert-<%= message.type %> alert-dismissible fade show" role="alert" id="alert">
+            <strong><%= message.message %></strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <% } %>
+
+        <form id="editCoupon" class="mt-5" method="post" action="/admin/updateCoupon/<%= coupon._id %>">
+          <div class="mb-3">
+            <label for="UrunAdi" class="form-label">code</label>
+            <input name="code" type="text" class="form-control" id="code" value="<%= coupon.code %>" required>
+            <small id="codeError" style="color: red;"></small>
+          </div>
+          <div class="mb-3">
+            <label for="UrunAdi" class="form-label">discount</label>
+            <input placeholder="100%" max="100" min="0" name="discount" type="number" class="form-control" id="discount" value="<%= coupon.discount %>" required>
+            <small id="discountError" style="color: red;"></small>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="UrunMiktar">minvalue</label>
+            <input min="0" name="minValue" type="number" class="form-control" id="minValue" value="<%= coupon.minValue %>" required>
+            <small  id="minValueError" style="color: red;"></small>
+          </div>
+          <div class="mb-3">
+            <label for="UrunAdi" class="form-label">expirydate</label>
+            <input name="expiryDate" type="date" class="form-control" id="expiryDate" value="<%= coupon.expiryDate %>" required>
+            <small id="expiryDateError" style="color: red;"></small>
+          </div>
+          <div class="mb-3">
+            <label for="UrunAdi" class="form-label">description</label>
+            <input name="description" type="text" class="form-control" id="description" value="<%= coupon.description %>" required>
+            <small  id="descriptionError" style="color: red;"></small>
+          </div>
+          
+          <div class="d-flex justify-content-center">
+            <button id="button" class="btn btn-primary" type="submit">UPDATE COUPON</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+
+  document.getElementById('button').addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const code = document.getElementById('code').value.trim();
+    if(code === '') {
+      
+      document.getElementById('codeError').innerHTML = 'Enter Code';
+      return;
+    }
+
+    const discount = document.getElementById('discount').value.trim();
+    if(discount === '') {
+
+      document.getElementById('codeError').innerHTML = '';
+      document.getElementById('discountError').innerHTML = 'Enter Discount';
+      return;
+    }
+
+    const minValue = document.getElementById('minValue').value.trim();
+    if(minValue === '') {
+
+      document.getElementById('discountError').innerHTML = '';
+      document.getElementById('minValueError').innerHTML = 'Enter Min Value';
+      return;
+    }
+
+    const expiryDate = document.getElementById('expiryDate').value.trim();
+    if(expiryDate === '') {
+
+      document.getElementById('minValueError').innerHTML = '';  
+      document.getElementById('expiryDateError') = 'Enter Expiry Date';
+      return;
+    }
+
+    const description = document.getElementById('description').value.trim();
+    if(description === ''){
+
+      document.getElementById('expiryDateError') = '';
+      document.getElementById('descriptionError').innerHTML = 'Enter description';
+      return;
+    }
+
+    document.getElementById('editCoupon').submit();
+  })
+</script>
+
+<%- include('footer') -%>

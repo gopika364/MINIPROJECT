@@ -1,0 +1,500 @@
+<%-include('header')-%>
+
+<div id="page-content">
+    <!--Collection Banner-->
+    <div class="collection-header">
+        <div class="collection-hero">
+            <div class="collection-hero__image"><img class="blur-up lazyload" data-src="/user/images/cat-women2.jpg" src="/user/images/cat-women2.jpg" alt="Women" title="Women" /></div>
+            <div class="collection-hero__title-wrapper"><h1 class="collection-hero__title page-width">SHOP NOW</h1></div>
+          </div>
+    </div>
+    <!--End Collection Banner-->
+    <div style="margin-top: 30px;" class="container">
+        <%if(searchItem){%>
+            <input type="text" hidden value="<%=searchItem%>" name="" id="searchName">
+        <%} %>
+        <div class="row">
+            <!--Sidebar-->
+            <div class="col-12 col-sm-12 col-md-3 col-lg-3 sidebar filterbar">
+                <div class="closeFilter d-block d-md-none d-lg-none"><i class="icon icon anm anm-times-l"></i></div>
+                <div class="sidebar_tags">
+                    <!--Categories-->
+                    <div class="sidebar_widget categories filter-widget">
+                        <form id="categoryFilterForm" class="category-filter">
+                            <div class="widget-title">
+                                <h2>Categories</h2>
+                            </div>
+                            <div class="widget-content">
+                                <select id="categoryFilter" name="categoryFilter" class="form-control">
+                                    <option value="all">All Categories</option>
+                                    <% category.forEach((row, index) => { %>
+                                        <% if (row.isAvailable == true) { %>
+                                            <option value="<%= row.category %>"><%= row.category %></option>
+                                        <% } %>
+                                    <% }) %>
+                                </select>
+                                <button type="button" class="btn btn-secondary btn--small" id="filterButton">Filter</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!--Categories-->
+                    <!--Price Filter-->
+                    <div class="sidebar_widget filterBox filter-widget">
+                        <div class="widget-title">
+                            <h2>Price</h2>
+                        </div>
+                        <!-- <form class="price-filter"> -->
+                            <div id="slider-range" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all">
+                                <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
+                                <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
+                                <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <p class="no-margin"><input name="priceFilter" id="amount" type="text"></p>
+                                </div>
+                                <div class="col-6 text-right margin-25px-top">
+                                    <button id="priceFilterBtn" class="btn btn-secondary btn--small">filter</button>
+                                </div>
+                            </div>
+                        <!-- </form> -->
+                    </div>
+                    
+                    
+                    <!--Banner-->
+                    <div class="sidebar_widget static-banner">
+                        <img src="/user/images/side-banner-2.jpg" alt="" />
+                    </div>
+                    <!--Banner-->
+                </div>
+            </div>
+            <!--End Sidebar-->
+            <!--Main Content-->
+            <div class="col-12 col-sm-12 col-md-9 col-lg-9 main-col">
+                
+                <hr>
+                <div class="productList">
+                    <!--Toolbar-->
+                    <button type="button" class="btn btn-filter d-block d-md-none d-lg-none"> Product Filters</button>
+                    <div class="toolbar">
+                        <div class="filters-toolbar-wrapper">
+                            <div class="row">
+                                
+                                <div class="col-4 col-md-4 col-lg-4 text-center filters-toolbar__item filters-toolbar__item--count d-flex justify-content-center align-items-center">
+                                </div>
+                                <div class="col-4 col-md-4 col-lg-4 text-right">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!--End Toolbar-->
+                    <div class="grid-products grid--view-items">
+                        <div class="row">
+                            <% products.forEach((row,index) =>{ %>
+                                <% if(row.isAvailable === true){ %>
+                            <div class="col-6 col-sm-6 col-md-4 col-lg-3 item">
+                                <!-- start product image -->
+                                <div class="product-image">
+                                    <!-- start product image -->
+                                    <a href="#">
+                                        <!-- image -->
+                                        <img class="primary blur-up lazyload" data-src="/img/<%= row.images[0] %>" src="/img/<%= row.images[0] %>" alt="image" title="product">
+                                        <!-- End image -->
+                                        <!-- Hover image -->
+                                        <img class="hover blur-up lazyload" data-src="/img/<%= row.images[1] %>" src="/img/<%= row.images[1] %>" alt="image" title="product">
+                                        <!-- End hover image -->
+                                        <%if(row.offer != null){ %>
+                                            <div class="product-labels rounded"><span class="lbl on-sale"><%=row.offer%> % Off</span></div>
+    
+                                        <%}%> 
+                                    </a>
+                                    <!-- end product image -->
+                                    <!-- Start product button -->
+                                    <form class="variants add" action="#" onclick="window.location.href='cart.html'"method="post">
+                                        <a href="/addtoCart/<%= row._id %>"><button class="btn btn-addto-cart" type="button" tabindex="0">Add To Cart</button></a> 
+                                    </form>
+                                    <div class="button-set">
+                                        <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview<%= index %>">
+                                            <i class="icon anm anm-search-plus-r"></i>
+                                        </a>
+                                        <div class="wishlist-btn">
+                                            <a class="wishlist add-to-wishlist" href="/addtowishlist/<%=row._id %>" title="Add to Wishlist">
+                                                <i class="icon anm anm-heart-l"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- end product button -->
+                                </div>
+                                <div class="product-details text-center">
+                                    <!-- product name -->
+                                    <div class="product-name">
+                                        <a href="/productdetails/<%= row._id %>"><%= row.name %></a>
+                                    </div>
+                                    <!-- End product name -->
+                                    <!-- product price -->
+                                    <div class="product-price">
+                                        <%if(row.offer != null){%>
+                                            <span class="original-price text-muted"><del>₹ <%= row.price %></del></span>
+                                            <span class="original-price">₹ <%= Math.round((row.price * row.offer) / 100) %></span>
+                                        <%} else {%>
+                                            <span class="original-price">₹ <%= row.price %></span>
+                                        <%}%>
+                                    </div>
+                                    <!-- End product price -->
+                                </div>
+                                <!-- end product image -->
+                            <div class="modal fade quick-view-popup" id="content_quickview<%= index %>">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div id="ProductSection-product-template" class="product-template__container prstyle1">
+                                        <div class="product-single">
+                                        <!-- Start model close -->
+                                        <a href="javascript:void()" data-dismiss="modal" class="model-close-btn pull-right" title="close"><span class="icon icon anm anm-times-l"></span></a>
+                                        <!-- End model close -->
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                <div class="product-details-img">
+                                                    <div class="pl-20">
+                                                        <img src="/img/<%= row.images[0] %>" alt="" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                                    <div class="product-single__meta">
+                                                        <h2 class="product-single__title">PRODUCT DETAILS</h2>
+                                                        <div class="prInfoRow">
+                                                            <div class="product-sku"><span class="variant-sku"><a href="/productdetails/<%= row._id %>"><%= row.name %></a></span></div>
+                                                        </div>
+                                                        <p class="product-single__price product-single__price-product-template">
+                                                            <span class="visually-hidden">Regular price</span>
+                                                            <%if(row.offer != null){%>
+                                                                <span class="original-price text-muted"><del>₹ <%= row.price %></del></span>
+                                                                <span class="original-price">₹ <%= Math.round((row.price * row.offer) / 100) %></span>
+                                                            <%} else {%>
+                                                                <span class="original-price">₹ <%= row.price %></span>
+                                                            <%}%>
+                                                        </p>
+                                                        <div class="product-single__description rte"><%= row.description %></div>
+                                                    </div>
+                                                    <form method="post" action="http://annimexweb.com/cart/add" id="product_form_10508262282" accept-charset="UTF-8" class="product-form product-form-product-template hidedropdown" enctype="multipart/form-data">
+                                                        
+                                                       
+                                                        <!-- Product Action -->
+                                                        <div class="product-action clearfix">
+                                                                                             
+                                                            <div class="product-form__item--submit">
+                                                                <form class="variants add" action="#" onclick="window.location.href='cart.html'"method="post">
+                                                                    <a href="/addtoCart/<%= row._id %>"><button class="btn btn-addto-cart" type="button" tabindex="0">Add To Cart</button></a> 
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                        <!-- End Product Action -->
+                                                    </form>
+                                                    <div class="display-table shareRow">
+                                                        <div class="display-table-cell">
+                                                            <div class="wishlist-btn">
+                                                                <a class="wishlist add-to-wishlist" href="#" title="Add to Wishlist"><i class="icon anm anm-heart-l" aria-hidden="true"></i> <span>Add to Wishlist</span></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <!--End-product-single-->
+                                        </div>
+                                    </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+                    <% })%>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    document.getElementById('filterButton').addEventListener('click', function () {
+        const categorySelect = document.getElementById('categoryFilter');
+        const productListContainer = document.querySelector('.grid-products');
+        const searchName = document.getElementById('searchName').value;
+
+        const fetchFilteredProducts = async () => {
+            const selectedCategory = categorySelect.value;
+
+            try {
+                const response = await fetch(`/filterProducts?category=${selectedCategory}&search=${searchName}`);
+                const data = await response.json();
+
+                // Clear existing content
+                productListContainer.innerHTML = '';
+
+                // Loop through the products and dynamically generate HTML
+                data.filteredProducts.forEach((row, index) => {
+    if (row.isAvailable === true) {
+        const productItem = document.createElement('div');
+        productItem.classList.add('col-6', 'col-sm-6', 'col-md-4', 'col-lg-3', 'item');
+
+        // Create a new row for every fourth product
+        if (index % 4 === 0) {
+            const rowElement = document.createElement('div');
+            rowElement.classList.add('row');
+            productListContainer.appendChild(rowElement);
+        }
+
+
+
+        productItem.innerHTML = `
+            <div class="product-item">
+                <div class="product-image">
+                    <a href="#">
+                        <img class="primary blur-up lazyload" data-src="/img/${row.images[0]}" src="/img/${row.images[0]}" alt="image" title="product">
+                        <img class="hover blur-up lazyload" data-src="/img/${row.images[1]}" src="/img/${row.images[1]}" alt="image" title="product">
+                    </a>
+                    ${row.offer != null ?
+                        `<div class="product-labels rounded">
+                            <span class="lbl on-sale">${row.offer} % Off</span>
+                        </div>` :
+                        ''}
+
+                    <!-- Form structure for Add to Cart button -->
+                    <form class="variants add" action="/addtoCart/${row._id}" method="get">
+                        <button class="btn btn-addto-cart" type="submit" tabindex="0">Add To Cart</button>
+                    </form>
+                    <div class="button-set">
+                        <div class="wishlist-btn">
+                            <a class="wishlist add-to-wishlist" href="/addtowishlist/${row._id}" title="Add to Wishlist">
+                                <i class="icon anm anm-heart-l"></i>
+                            </a>
+                        </div>
+                        <!-- Wishlist button -->
+                        <!-- Quick View button -->
+                        <a href="/productdetails/${row._id}" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview${index}">
+                            <i class="icon anm anm-search-plus-r"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="prInfoRow">
+                    <div class="product-sku"><span class="variant-sku"><a href="/productdetails/${ row._id }">${ row.name }</a></span></div>
+                </div>
+                <p class="product-single__price product-single__price-product-template">
+                    ${row.offer != null ? 
+                        `<span class="original-price text-muted"><del>₹ ${row.price}</del></span>
+                        <span class="original-price">₹ ${Math.round((row.price * row.offer) / 100)}</span>` :
+                        `<span class="original-price">₹ ${row.price}</span>`}
+                </p>
+
+            </div>
+
+            <div class="modal fade quick-view-popup" id="content_quickview${index}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div id="ProductSection-product-template" class="product-template__container prstyle1">
+                                <div class="product-single">
+                                    <!-- Start model close -->
+                                    <a href="javascript:void()" data-dismiss="modal" class="model-close-btn pull-right" title="close">
+                                        <span class="icon icon anm anm-times-l"></span>
+                                    </a>
+                                    <!-- End model close -->
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="product-details-img">
+                                                <div class="pl-20">
+                                                    <img src="/img/${row.images[0]}" alt="" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="product-single__meta">
+                                                <h2 class="product-single__title">PRODUCT DETAILS</h2>
+                                                <div class="prInfoRow">
+                                                    <div class="product-sku">
+                                                        <span class="variant-sku">
+                                                            <a href="/productdetails/${row._id}">${row.name}</a>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <p class="product-single__price product-single__price-product-template">
+                                                    <span class="visually-hidden">Regular price</span>
+                                                    ${row.offer != null ?
+                                                        `<span class="original-price text-muted"><del>₹ ${row.price}</del></span>
+                                                        <span class="original-price">₹ ${Math.round((row.price * row.offer) / 100)}</span>` :
+                                                        `<span class="original-price">₹ ${row.price}</span>`}
+                                                </p>
+                                                <div class="product-single__description rte">${row.description}</div>
+                                            </div>
+                                            <form method="post" action="http://annimexweb.com/cart/add" id="product_form_10508262282" accept-charset="UTF-8" class="product-form product-form-product-template hidedropdown" enctype="multipart/form-data">
+                                                <!-- Product Action -->
+                                                <div class="product-action clearfix">
+                                                    <div class="product-form__item--submit">
+                                                        <form class="variants add" action="#" onclick="window.location.href='cart.html'" method="post">
+                                                            <a href="/addtoCart/${row._id}">
+                                                                <button class="btn btn-addto-cart" type="button" tabindex="0">Add To Cart</button>
+                                                            </a>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <!-- End Product Action -->
+                                            </form>
+                                            <div class="display-table shareRow">
+                                                <div class="display-table-cell">
+                                                    <div class="wishlist-btn">
+                                                        <a class="wishlist add-to-wishlist" href="#" title="Add to Wishlist">
+                                                            <i class="icon anm anm-heart-l" aria-hidden="true"></i>
+                                                            <span>Add to Wishlist</span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        `;
+
+
+
+
+       // Append the productItem to the last created row
+        const rows = productListContainer.querySelectorAll('.row');
+        const lastRow = rows[rows.length - 1];
+        lastRow.appendChild(productItem);
+    }
+});
+
+            } catch (error) {
+                console.error('Error fetching filtered products:', error);
+            }
+        };
+
+        // Event listener for category filter change
+        // categorySelect.addEventListener('change', fetchFilteredProducts);
+
+        // Initial fetch to load products when the page loads
+        fetchFilteredProducts();
+    });
+</script>
+
+
+
+
+<!-- -------------------------------price filter------------------------------------- -->
+
+<script>
+    document.getElementById('priceFilterBtn').addEventListener('click', function () {
+        const categorySelect = document.getElementById('categoryFilter');
+        
+        const priceFilter = document.getElementById('amount').value;
+        const searchName = document.getElementById('searchName').value;
+
+
+        const numericValues = priceFilter.match(/\d+/g);
+        const minValue = Number(numericValues[0]);
+        const maxValue = Number(numericValues[1]);
+
+        console.log(minValue);
+        console.log(maxValue);
+
+        const productListContainer = document.querySelector('.grid-products');
+
+        const fetchFilteredProducts = async () => {
+            const selectedCategory = categorySelect.value;
+
+            try {
+                // const response = await fetch(`/priceFilter?category=${selectedCategory}`);
+                const response = await fetch(`/priceFilter?category=${selectedCategory}&minValue=${minValue}&maxValue=${maxValue}&search=${searchName}`);
+
+                const data = await response.json();
+
+                // Clear existing content
+                productListContainer.innerHTML = '';
+
+                // Loop through the products and dynamically generate HTML
+                data.products.forEach((row, index) => {
+    if (row.isAvailable === true) {
+        const productItem = document.createElement('div');
+        productItem.classList.add('col-6', 'col-sm-6', 'col-md-4', 'col-lg-3', 'item');
+
+        // Create a new row for every fourth product
+        if (index % 4 === 0) {
+            const rowElement = document.createElement('div');
+            rowElement.classList.add('row');
+            productListContainer.appendChild(rowElement);
+        }
+
+        productItem.innerHTML = `
+            <div class="product-item">
+                <div class="product-image">
+                    <a href="#">
+                        <img class="primary blur-up lazyload" data-src="/img/${row.images[0]}" src="/img/${row.images[0]}" alt="image" title="product">
+                        <img class="hover blur-up lazyload" data-src="/img/${row.images[1]}" src="/img/${row.images[1]}" alt="image" title="product">
+                    </a>
+                    <!-- Form structure for Add to Cart button -->
+                    <form class="variants add" action="/addtoCart/${row._id}" method="get">
+                        <button class="btn btn-addto-cart" type="submit" tabindex="0">Add To Cart</button>
+                    </form>
+                    <div class="button-set">
+
+                        <div class="wishlist-btn">
+                                            <a class="wishlist add-to-wishlist" href="/addtowishlist/${row._id}" title="Add to Wishlist">
+                                                <i class="icon anm anm-heart-l"></i>
+                                            </a>
+                                        </div>
+                    <!-- Wishlist button -->
+                
+
+                    <!-- Quick View button -->
+                    <a href="#" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview${index}">
+                        <i class="icon anm anm-search-plus-r"></i>
+                    </a>
+
+
+                    <!-- Add any other product image-related HTML here -->
+                </div>
+            </div>
+            <div class="product-details text-center">
+                    <div class="product-name">
+                        <a href="/productdetails/${row._id}">${row.name}</a>
+                    </div>
+                </div>
+        `;
+
+        // Append the productItem to the last created row
+        const rows = productListContainer.querySelectorAll('.row');
+        const lastRow = rows[rows.length - 1];
+        lastRow.appendChild(productItem);
+    }
+});
+
+            } catch (error) {
+                console.error('Error fetching filtered products:', error);
+            }
+        };
+
+        // Event listener for category filter change
+        // categorySelect.addEventListener('change', fetchFilteredProducts);
+
+        // Initial fetch to load products when the page loads
+        fetchFilteredProducts();
+    });
+</script>
+
+
+    
+
+<%-include('footer')-%>

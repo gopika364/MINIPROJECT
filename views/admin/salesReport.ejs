@@ -1,0 +1,108 @@
+<%- include('header') -%>
+
+<style>
+  /* Your existing styles */
+</style>
+
+<div class="col-12" style="padding: 20px;">
+  <div class="bg-light rounded h-100 p-4">
+    <h6 class="mb-4">Sales report</h6>
+    <div class="d-flex align-items-center">
+      <!-- Toggle buttons for date, month, and year -->
+      <button class="btn btn-secondary me-2" onclick="showDateFields()">Select Dates</button>
+    </div>
+
+    <!-- Calendar field for selecting start and end dates -->
+    <div style="display: none;" id="dateFields">
+      <label for="startDate">Start Date:</label>
+      <input type="date" id="startDate" class="form-control">
+      <label for="endDate">End Date:</label>
+      <input type="date" id="endDate" class="form-control">
+    </div>
+
+    <!-- Buttons to download report as PDF or Excel -->
+    <button onclick="downloadOrders()" type="button" class="btn btn-primary mt-4" id="pdf">Download as PDF</button>
+    <button onclick="downloadExcel()" class="btn btn-success mt-4" id="excel">Download as Excel</button>
+
+    <!-- Add a container to display the selected date, month, or year -->
+    <div id="selectedFieldDisplay"></div>
+  </div>
+</div>
+
+<script>
+  function showDateFields() {
+    document.getElementById('dateFields').style.display = 'block';
+    document.getElementById('dateInput').style.display = 'none';
+  }
+
+  async function downloadOrders() {
+  try {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    if (!startDate || !endDate) {
+      console.error('Please select both start and end dates.');
+      return;
+    }
+
+    const response = await fetch(`/admin/salesReportPdf/${startDate}/${endDate}`);
+    
+    if (response.ok) {
+      const arrayBuffer = await response.arrayBuffer();
+      const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'sales_report.pdf';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } else {
+      console.error('Error generating PDF');
+    }
+  } catch (error) {
+    console.error('Fetch error:', error);
+  }
+}
+
+async function downloadExcel() {
+  try {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    if (!startDate || !endDate) {
+      console.error('Please select both start and end dates.');
+      return;
+    }
+
+    const response = await fetch(`/admin/salesExcelReport/${startDate}/${endDate}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      },
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+
+      // Create a temporary link and trigger the download
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'sales_report.xlsx';
+      a.click();
+
+      // Clean up the temporary link
+      window.URL.revokeObjectURL(url);
+    } else {
+      console.error('Error generating Excel file');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+  
+  
+</script>
+
+<%- include('footer') -%>

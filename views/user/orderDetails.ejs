@@ -1,0 +1,370 @@
+<% function formatDate(dateString) {
+  const options = { day: 'numeric', month: 'short', year: 'numeric' };
+  const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
+  return formattedDate;
+}
+%>
+
+<%-include('header')-%>
+
+<style>
+.gradient-custom {
+background: #000000;
+
+background: -webkit-linear-gradient(to top left, rgb(9, 5, 12), rgb(67, 65, 71));
+
+background: linear-gradient(to top left, rgb(6, 6, 6), rgb(34, 33, 36))
+}
+</style>
+</head>
+<style>
+  .gradient-custom-2 {
+background: #000000;
+
+background: -webkit-linear-gradient(to right, rgb(7, 7, 7), rgb(0, 0, 0));
+
+background: linear-gradient(to right, rgb(3, 3, 3), rgb(0, 0, 0))
+}
+
+#progressbar-1 {
+color: #455A64;
+}
+
+#progressbar-1 li {
+list-style-type: none;
+font-size: 13px;
+width: 33.33%;
+float: left;
+position: relative;
+}
+
+#progressbar-1 #step1:before {
+content: "1";
+color: #fff;
+width: 29px;
+margin-left: 22px;
+padding-left: 11px;
+}
+
+#progressbar-1 #step2:before {
+content: "2";
+color: #fff;
+width: 29px;
+}
+
+#progressbar-1 #step3:before {
+content: "3";
+color: #fff;
+width: 29px;
+margin-right: 22px;
+text-align: center;
+}
+
+#progressbar-1 li:before {
+line-height: 29px;
+display: block;
+font-size: 12px;
+background: #455A64;
+border-radius: 50%;
+margin: auto;
+}
+
+#progressbar-1 li:after {
+content: '';
+width: 121%;
+height: 2px;
+background: #455A64;
+position: absolute;
+left: 0%;
+right: 0%;
+top: 15px;
+z-index: -1;
+}
+
+#progressbar-1 li:nth-child(2):after {
+left: 50%
+}
+
+#progressbar-1 li:nth-child(1):after {
+left: 25%;
+width: 121%
+}
+
+#progressbar-1 li:nth-child(3):after {
+left: 25%;
+width: 50%;
+}
+
+#progressbar-1 li.active:before,
+#progressbar-1 li.active:after {
+background: #000000;
+}
+
+.card-stepper {
+z-index: 0
+}
+</style>
+
+
+
+<style>
+  .pagination-box {
+    display: inline-block;
+    margin: 0 5px; 
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .pagination-box a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .pagination-box.active {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  </style>
+
+</head>
+
+<body>
+  <button id="go-back" class="btn btn-secondary">
+    <a href="/userProfile" style="color: white;">GO BACK</a>
+  </button>
+
+  <div class="wishlist-table table-content table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th class="product-name text-center alt-font">PRODUCT IMAGE</th>
+          <th class="product-price text-center alt-font">PRODUCT NAME</th>
+          <th class="product-name alt-font">PRICE</th>
+          <th class="product-price text-center alt-font">PRODUCT DETAILS</th>
+          <th class="product-subtotal text-center alt-font">INVOICE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% orders.forEach((row, index) => { %>
+          <% row.orderItems.forEach((product, position) => { %>
+            <tr>
+              
+              <td class="product-thumbnail text-center">
+                <img src="<%= product.image %>" class="img-fluid" alt="Product Image">
+              </td>
+              <td class="product-name">
+                <h4 class="no-margin"><%= product.productName %></h4>
+              </td>
+              <td class="product-price text-center">
+                <span class="amount">₹ <%= product.price %></span>
+              </td>
+
+             <!-- Button to Open the Modal -->
+              <td class="product-price text-center">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal<%= index %>">
+                  TRACK ORDER
+                </button>
+              </td>
+
+
+              <!-- The Modal -->
+              <div style="width: 100%;" class="modal" id="myModal<%= index %>">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+
+                     <!-- Modal Header -->
+                  <div class="modal-header">
+                    <h4 class="modal-title">Order Status</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div>
+
+                  <!-- Modal body -->
+                  <!-- Modal Body -->
+            <div class="modal-body">
+              <% if (row.status === 'returned') { %>
+                  <div class="alert alert-success" role="alert">
+                      Order has been returned successfully!
+                  </div>
+              <% } else if (row.status === 'cancelled') { %>
+                  <div class="alert alert-warning" role="alert">
+                      Order has been cancelled.
+                  </div>
+              <% } else { %>
+                  <section class="vh-100 gradient-custom-2">
+                      <div class="container py-5 h-100">
+                          <div class="row d-flex justify-content-center align-items-center h-100">
+                              <div class="col-12">
+                                  <div class="card card-stepper" style="border-radius: 16px;">
+                                      <div class="card-header p-4">
+                                          <div class="d-flex justify-content-between align-items-center">
+                                              <div>
+                                                  <p class="text-muted mb-2"> Order ID <span class="fw-bold text-body"><%= row._id %></span></p>
+                                                  <p class="text-muted mb-0"> Placed On <span class="fw-bold text-body"><%= formatDate(row.date) %></span> </p>
+                                              </div>
+                                              <div></div>
+                                          </div>
+                                      </div>
+                                      <div class="card-body p-4" style="max-height: 400px; overflow-y: auto;">
+                                          <% row.orderItems.forEach((products, position) => { %>
+                                              <div>
+                                                  <div class="d-flex flex-row mb-4 pb-2">
+                                                      <div class="flex-fill">
+                                                          <h5 class="bold"><%= products.productName %></h5>
+                                                          <p class="text-muted"> Qt: <%= products.quantity %> </p>
+                                                          <h4 class="mb-3">₹ <%= products.price %><span class="small text-muted"> (<%= row.paymentMethod %>) </span></h4>
+                                                      </div>
+                                                      <div>
+                                                          <img class="align-self-center img-fluid" src="<%= products.image %>" width="100">
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              <h3>GrandTotal: ₹ <%= row.grandTotal %></h3>
+                                          <% }) %>
+                                          <h3>GrandTotal: ₹ <%= row.grandTotal %></h3>
+                                          <ul id="progressbar-1" class="mx-0 mt-0 mb-5 px-0 pt-0 pb-4">
+                                              <% if(row.status == 'pending') { %>
+                                                  <li class="step0 active" id="step1"><span style="margin-left: 22px; margin-top: 12px;">PENDING</span></li>
+                                                  <li class="step0 text-center" id="step2"><span>SHIPPED</span></li>
+                                                  <li class="step0 text-muted text-end" id="step3"><span style="margin-right: 22px;">DELIVERED</span></li>
+                                              <% } else if(row.status == 'cancelled') { %>
+                                                  <li class="step0 active" id="step1"><span style="margin-left: 22px; margin-top: 12px;"></span></li>
+                                                  <li class="step0 text-center active" id="step2"><span ></span></li>
+                                                  <li class="step0 active text-end" id="step3"><span style="margin-right: 22px;">CANCELLED</span></li>
+                                              <% } else if (row.status == 'shipped') { %>
+                                                  <li class="step0 active" id="step1"><span style="margin-left: 22px; margin-top: 12px;">PENDING</span></li>
+                                                  <li class="step0 text-center active" id="step2"><span >SHIPPED</span></li>
+                                                  <li class="step0 text-end" id="step3"><span style="margin-right: 22px;">DELIVERED</span></li>
+                                              <% } else if(row.status == 'delivered') { %>
+                                                  <li class="step0 active" id="step1"><span style="margin-left: 22px; margin-top: 12px;">PENDING</span></li>
+                                                  <li class="step0 text-center active" id="step2"><span >SHIPPED</span></li>
+                                                  <li class="step0 text-end active" id="step3"><span style="margin-left: 45px;">DELIVERED</span></li>
+                                              <% } %>
+                                          </ul>
+                                      </div>
+                                      <div class="card-footer p-4">
+                                          <div class="d-flex justify-content-between">
+                                              <div class="border-start h-100"></div>
+                                              <div class="border-start h-100"></div>
+                                              <div class="border-start h-100"></div>
+                                              <% if (row.status === 'pending' || row.status === 'shipped') { %>
+                                                  <h5 class="fw-normal mb-0">
+                                                      <a href="#" class="cancel-order-link" data-order-id="<%= row._id %>">Cancel Order</a>
+                                                  </h5>
+                                              <% } %>
+
+                                              <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+                                              <% if (row.status === 'delivered') { %>
+                                                  <h5 class="fw-normal mb-0"><a href="admin/return/<%= row._id %>">Return Order</a></h5>
+                                              <% } %>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </section>
+              <% } %>
+          </div>
+                  <!-- Modal footer -->
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+              <td class="product-remove text-center" valign="middle">
+                <i onclick="invoice('<%= row._id %>')" type="button" class="fas fa-file-pdf">
+                  <img style="width: 30px;" src="/user/images/pdf-file.png" alt="Invoice download">
+                </i>
+              </td>
+            </tr>
+          <% }); %>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- pagination -->
+    <div class="pagination mt-5">
+      <ul>
+        <% const startPage = Math.max(currentPage - 1, 1); %>
+        <% const endPage = Math.min(startPage + 2, totalPages); %>
+    
+        <% if (currentPage > 1) { %>
+          <li class="prev"><a href="/orderDetails?page=<%= currentPage - 1 %>"><i class="fa fa-caret-left" aria-hidden="true"></i></a></li>
+        <% } %>
+    
+        <% for (let i = startPage; i <= endPage; i++) { %>
+          <li class="<%= (i === currentPage) ? 'active' : '' %>">
+            <a href="/orderDetails?page=<%= i %>"><%= i %></a>
+          </li>
+        <% } %>
+    
+        <% if (currentPage + 2 < totalPages) { %>
+          <li class="next"><a href="/orderDetails?page=<%= currentPage + 3 %>"><i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
+        <% } %>
+      </ul>
+    </div>
+
+
+  <!-- invoice -->
+
+  <script>
+    async function invoice(orderId) {
+        try {
+            const response = await fetch(`/myinvoice/${orderId}`);
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'invoice.pdf';
+                a.click();
+                window.URL.revokeObjectURL(url);
+            } else {
+                console.error('Error generating PDF');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+  </script>
+
+
+<!--cancel order-->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const cancelOrderLinks = document.querySelectorAll(".cancel-order-link");
+
+      cancelOrderLinks.forEach(link => {
+        link.addEventListener("click", function (event) {
+          event.preventDefault();
+
+          const orderId = this.getAttribute("data-order-id");
+
+          Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, cancel it!",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = `/cancelOrder/${orderId}`;
+            }
+          });
+        });
+      });
+    });
+  </script>
+
+
+  <%-include('footer')-%>
+
+
+
+

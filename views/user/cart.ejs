@@ -1,0 +1,163 @@
+<%-include('header')-%>
+
+<div id="page-content">
+    <!--Page Title-->
+    <div class="page section-header text-center">
+        <div class="page-title">
+            <div class="wrapper"><h1 class="page-width">Shopping Cart</h1></div>
+          </div>
+    </div>
+    <!--End Page Title-->
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 main-col">
+                <form action="/removeCart" method="post" class="cart style2">
+                    <div class="table-responsive">
+                    <table class="table">
+                            <thead class="cart__row cart__header">
+                                <tr>
+                                    <th colspan="2" class="text-center">Product</th>
+                                    <th class="text-center">Price</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-right">Total</th>
+                                    <th class="action">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% cart.forEach(row =>{ %>
+                                    <tr class="cart__row border-bottom line1 cart-flex border-top">
+                                        <td class="cart__image-wrapper cart-flex-item">
+                                            <a href="#"><img class="cart__image" src="/img/<%= row.image %>" alt="Elastic Waist Dress - Navy / Small"></a>
+                                        </td>
+                                        <td class="cart__meta small--text-left cart-flex-item">
+                                            <div class="list-view-item__title">
+                                                <a ><%= row.productName %></a>
+                                            </div>
+                                            <div class="cart__meta-text">
+                                            </div>
+                                        </td>
+                                        <td class="cart__price-wrapper cart-flex-item">
+                                            <span class="money">₹ <%= row.price %></span>
+                                        </td>
+                                        <!-- Quantity update column -->
+                                        <td class="cart__update-wrapper cart-flex-item text-right">
+                                            <div class="cart__qty text-center">
+                                                <div class="qtyField">
+                                                    <!-- Decrease button -->
+                                                    <a class="qtyBtn minus" href="javascript:void(0);" onclick="updateQuantity('<%= row.productId %>', 'decrease')">
+                                                        <i class="icon icon-minus"></i>
+                                                    </a>
+                                                    <input class="cart__qty-input qty" type="text" name="updates[]" id="qty-<%= row.productId %>" value="<%= row.quantity %>" pattern="[0-9]*" readonly>
+                                                    <!-- Increase button -->
+                                                    <a id="plus_<%= row.productId %>" class="qtyBtn plus" href="javascript:void(0);" onclick="updateQuantity('<%= row.productId %>', 'increase')">
+                                                        <i class="icon icon-plus"></i>
+                                                    </a>
+                                                    <div style="color: red;" id="outofstock_<%= row.productId %>"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-right small--hide cart-price">
+                                            <div>₹ <span class="money" id="totalPrice_<%= row.productId %>"><%= row.totalPrice %></span></div>
+                                        </td>
+                                        <td class="text-center small--hide">
+                                            <button type="submit" class="btn btn--secondary cart__remove" name="cartId" value="<%= row._id %>" title="Remove item">
+                                                <i class="icon icon anm anm-times-l"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                               <% }) %>
+                            </tbody>
+                            <tfoot>
+                            </tfoot>
+                        </table> 
+                    </div>
+                </form>                   
+               </div>
+            
+            
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4 mb-4">
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4 mb-4">
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4 cart__footer">
+                        <div class="solid-border">	
+                          <div class="row border-bottom pb-2">
+                            <span class="col-12 col-sm-6 cart__subtotal-title">Subtotal</span>
+                            <span class="col-12 col-sm-6 text-right">₹ <span class="money" id="total"><%= grandTotal1 %></span></span>
+                          </div>
+                          <div class="row border-bottom pb-2 pt-2">
+                            <span class="col-12 col-sm-6 cart__subtotal-title"><strong>Grand Total</strong></span>
+                            <span class="col-12 col-sm-6 cart__subtotal-title cart__subtotal text-right">₹ <span class="money" id="grandTotal"><%= grandTotal1 %></span></span>
+                          </div>
+                          <p class="cart_tearm">
+                            <% if(cart.length > 0) { %>
+                                <a href="/checkOut" class="btn btn--small-wide checkout" id="cartCheckout" disabled="disabled">Proceed To Checkout</a>
+                           <% } %>
+                          </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <p>
+            <%if(cart.length <= 0) { %>
+                <a href="/" class="btn btn--has-icon-after">Continue shopping <i class="fa fa-caret-right" aria-hidden="true"></i></a>
+                <% } %>
+            </p>
+    </div>
+
+
+            <script>
+                function updateQuantity(productId, action) {
+                    const quantityInput = document.getElementById(`qty-${productId}`);
+                    let quantity = parseInt(quantityInput.value, 10);
+
+                    if (action === 'increase') {
+                        quantity++;
+                    } else if (action === 'decrease' && quantity > 1) {
+                        quantity--;
+                    }
+
+                    quantityInput.value = quantity;
+                
+
+
+                    fetch('/updateCartItem', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            productId: productId,
+                            action: action,
+                            quantity: quantity,
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.message == "Out of Stock"){
+                            document.getElementById(`outofstock_${productId}`).innerHTML = 'Out of stock'
+                            document.getElementById(`plus_${productId}`).style.display = "none";
+                        }else{
+                            document.getElementById(`outofstock_${productId}`).innerHTML = ''
+                            document.getElementById(`plus_${productId}`).style.display = "block";
+                            document.getElementById(`totalPrice_${productId}`).innerHTML = data.updatedPrice
+                            document.getElementById('total').innerHTML = data.updatedGrandTotal;
+                            document.getElementById('grandTotal').innerHTML = data.updatedGrandTotal;
+                        }
+
+                    })
+                    .catch(error => {
+                        console.error('Error updating quantity:', error);
+                    });
+                }
+            </script>
+
+
+
+<%-include('footer')-%>
