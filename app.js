@@ -56,8 +56,8 @@ app.use('/admin',admin);
 
 
 // create Server
-const port = process.env.PORT || 4000;
+const port = 3000;
 app.listen(port,()=>{
-    console.log("server is running on http://localhost:4000")});
+    console.log("server is running on http://localhost:3000")});
 
     
