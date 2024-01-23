@@ -21,7 +21,7 @@ const isUserBlocked = require('../middleware/isUserBlocked');
 router.get('/',user.gethome);
 
 router.get('/shop',user.shop);
-// router.get('/shopCategory/:categoryName',user.shopCategory);
+// router.get('/shopCategory/:categoryName',user.shopCategory)
 
 router.get('/login',user.getlogin);
 router.post('/login',user.login);
